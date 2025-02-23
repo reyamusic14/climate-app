@@ -11,9 +11,9 @@ export default function ClimateApp() {
   const [place, setPlace] = useState("")
   const [issue, setIssue] = useState("")
   const [generatedImages, setGeneratedImages] = useState([
-    { url: "/placeholder.svg?height=300&width=300", platform: "AI Platform 1" },
-    { url: "/placeholder.svg?height=300&width=300", platform: "AI Platform 2" },
-    { url: "/placeholder.svg?height=300&width=300", platform: "AI Platform 3" },
+    { url: "/climate-app/placeholder.svg?height=300&width=300", platform: "AI Platform 1" },
+    { url: "/climate-app/placeholder.svg?height=300&width=300", platform: "AI Platform 2" },
+    { url: "/climate-app/placeholder.svg?height=300&width=300", platform: "AI Platform 3" },
   ])
   const [selectedImage, setSelectedImage] = useState(null)
 
@@ -31,6 +31,29 @@ export default function ClimateApp() {
     // Share image
     console.log("Sharing image:", imageUrl)
   }
+
+  const fetchWeatherData = async (city: string) => {
+    try {
+      const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
+      if (!apiKey) {
+        throw new Error('API key not configured');
+      }
+      
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
+      );
+      
+      if (!response.ok) {
+        throw new Error('Weather data fetch failed');
+      }
+      
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching weather data:', error);
+      throw error;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
